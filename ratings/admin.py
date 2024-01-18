@@ -5,7 +5,8 @@ from .models import Rating
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
+    list_display = ['content_obj', 'user', 'value', 'active']
     raw_id_fields = ["user"]
-    readonly_fields = ["content_object"]
+    readonly_fields = ["content_obj"]
 
 # Register your models here.
