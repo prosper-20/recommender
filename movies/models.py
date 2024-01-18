@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=120, unique=True)
