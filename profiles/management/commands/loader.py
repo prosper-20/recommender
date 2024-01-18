@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandParser
 from django.contrib.auth import get_user_model
 from cfehome import utils as cfehome_utils
-
+from movies.models import Movie
 
 User = get_user_model()
 
@@ -19,6 +19,11 @@ class Command(BaseCommand):
         generate_users = options.get("users")
         if load_movies:
             movie_dataset = cfehome_utils.load_movie_data(limit=count)
+            movies_new = [Movie(**x) for x in movie_dataset]
+            movies_bulk = Movie.objects.bulk_create(movies_new, ignore_conflicts=True)
+            print(f"New movies: {len(movies_bulk)}")
+            if show_total:
+                print(f"Total movies: {Movie.objects.count()}")
         if generate_users:
             profiles = cfehome_utils.get_fake_profiles(count=count)
             new_users = []
