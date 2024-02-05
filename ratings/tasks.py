@@ -9,7 +9,7 @@ User = get_user_model()
 
 def generate_fake_reviews(count=100, users=10, null_avg=False):
     user_s = User.objects.first()
-    user_e = User.objects.lat()
+    user_e = User.objects.last()
     random_user_ids = random.sample(range(user_s.id, user_e.id), users)
     users = User.objects.filter(id__in=random_user_ids)
     movies = Movie.objects.all().order_by("?")[:count]
@@ -23,8 +23,8 @@ def generate_fake_reviews(count=100, users=10, null_avg=False):
     new_ratings = []
     for movie in movies:
         rating_obj = Rating.objects.create(
-            content_object = movie,
-            value = user_ratings.pop()
+            content_obj = movie,
+            value = user_ratings.pop(),
             user = random.choice(users)
         )
         new_ratings.append(rating_obj.id)

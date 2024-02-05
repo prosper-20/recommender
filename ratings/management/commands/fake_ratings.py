@@ -24,4 +24,4 @@ class Command(BaseCommand):
         print(f"New ratings: {len(new_ratings)}")
         if show_total:
             qs = Rating.objects.all()
-            print(f"Total ratings": {qs.count()})
+            print(f"Total ratings: {qs.count()}")
