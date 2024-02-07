@@ -3,8 +3,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models.query import QuerySet
 from ratings.models import Rating
 from django.utils import timezone
-from datetime import timedelta
-from datetime import datetime as dt
+import datetime
 from django.db.models import Q
 
 
@@ -13,7 +12,7 @@ RATING_CALC_TIME_IN_DAYS = 3
 class MovieQuerySet(models.QuerySet):
     def needs_updating(self):
         now = timezone.now()
-        days_ago = now - dt.timedelta(days=3)
+        days_ago = now - datetime.timedelta(days=3)
         return self.filter(
             Q(rating_last_updated__isnull = True) |
             Q(rating_last_updated__lte = days_ago)
