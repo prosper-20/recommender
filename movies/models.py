@@ -15,7 +15,7 @@ class MovieQuerySet(models.QuerySet):
         days_ago = now - datetime.timedelta(days=3)
         return self.filter(
             Q(rating_last_updated__isnull = True) |
-            Q(rating_last_updated__gte = days_ago)
+            Q(rating_last_updated__lte = days_ago)
         )
 
 
@@ -35,7 +35,6 @@ class Movie(models.Model):
     rating_last_updated = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     rating_count = models.IntegerField(blank=True, null=True)
     rating_avg = models.DecimalField(decimal_places=2, max_digits=5, blank=True, null=True)
-
 
     objects = MovieManager()
 
