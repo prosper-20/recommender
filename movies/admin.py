@@ -3,6 +3,6 @@ from .models import Movie
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ["__str__", "calculte_ratings_count"]
-    readonly_fields = ["calculte_ratings_count", "rating_avg_display"]
+    list_display = ["__str__", "rating_avg", "rating_count", "rating_last_upadated"]
+    readonly_fields = ["rating_avg", "rating_count", "rating_avg_display"]
 
