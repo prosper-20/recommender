@@ -1,11 +1,30 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
+from django.db.models.query import QuerySet
 from ratings.models import Rating
 from django.utils import timezone
-from datetime import datetime
+from datetime import timedelta, datetime
+from django.db.models import Q
 
 
-RATING_CALC_TIME = 1
+RATING_CALC_TIME_IN_DAYS = 3
+
+class MovieQuerySet(models.QuerySet):
+    def needs_updating(self):
+        now = timezone.now()
+        days_ago = now - datetime.timedelta(days=3)
+        return self.filter(
+            Q(rating_last_updated__isnull = True) |
+            Q(rating_last_updated__gte = days_ago)
+        )
+
+
+class MovieManager(models.Manager):
+    def get_queryset(self, *args, **kwargs) -> QuerySet:
+        return MovieQuerySet(self.model, using=self.db)
+    
+    def needs_updating(self):
+        return self.get_queryset().needs_updating()
 
 class Movie(models.Model):
     title = models.CharField(max_length=120, unique=True)
@@ -18,11 +37,14 @@ class Movie(models.Model):
     rating_avg = models.DecimalField(decimal_places=2, max_digits=5, blank=True, null=True)
 
 
+    objects = MovieManager()
+
+
     def rating_avg_display(self):
         now = timezone.now()
         if not self.rating_last_updated:
             return self.calculte_rating()
-        if self.rating_last_updated > now - datetime.timedelta(minutes=RATING_CALC_TIME):
+        if self.rating_last_updated > now - datetime.timedelta(minutes=RATING_CALC_TIME_IN_DAYS):
             return self.rating_avg
         return self.calculte_rating
 
