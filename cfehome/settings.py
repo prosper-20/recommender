@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'profiles.apps.ProfilesConfig',
     'movies.apps.MoviesConfig',
-    'ratings.apps.RatingsConfig'
+    'ratings.apps.RatingsConfig',
+    'django_celery_beat',
+    "django_celery_results"
 ]
 
 MIDDLEWARE = [
@@ -115,6 +117,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+CELERY_BROKER_URL = "redis://localhost:1234"
+
+CELERY_RESULT_BACKEND = "django-db"
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DataBaseScheduler"
 
 
 # Static files (CSS, JavaScript, Images)
