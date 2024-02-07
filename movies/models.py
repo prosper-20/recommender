@@ -46,4 +46,6 @@ class Movie(models.Model):
 
 
     def __str__(self):
-        return self.title
+        if not self.release_date:
+            return f"{self.title}"
+        return f"{self.title} {self.release_date.year}"
